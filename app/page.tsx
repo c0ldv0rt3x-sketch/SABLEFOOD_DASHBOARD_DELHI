@@ -8,7 +8,7 @@ import AnalyticsRow from "@/components/AnalyticsRow";
 import DataTableTimelineRow from "@/components/DataTableTimelineRow";
 import MapWrapper from "@/components/map/MapWrapper";
 import EmergencyModal from "@/components/EmergencyModal";
-import { DELHI_METRICS, RiskStatus } from "@/lib/config/delhiConfig";
+import { DELHI_METRICS, RiskStatus, Hotspot } from "@/lib/config/delhiConfig";
 import {
   ShieldAlert,
   ShieldCheck,
@@ -52,7 +52,7 @@ interface FloodStatusResponse {
     totalCapacity: number;
     currentOccupancy: number;
   };
-  hotspots: Array<any>;
+  hotspots: Array<Hotspot>;
   hourlyForecast: Array<{
     time: string;
     hour: string;
@@ -151,7 +151,11 @@ export default function OperationsDashboard() {
   }, []);
 
   useEffect(() => {
-    fetchStatus();
+    const fetchInitialData = async () => {
+      await fetchStatus();
+    };
+    fetchInitialData();
+
     // Poll every 30 seconds
     const interval = setInterval(() => fetchStatus(), 30000);
     return () => clearInterval(interval);
